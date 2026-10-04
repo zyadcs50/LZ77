@@ -94,7 +94,55 @@ class LZ77Compressor:
         return tags  
     
     def decompress(self, tags):
-        pass  
+        result = []
+        for distance, length, next_char in tags:
+            if length > 0:
+               start_index = len(result) - distance
+               for i in range(length):
+                   result.append(result[start_index + i])
+        
+            if next_char != "Null":
+               result.append(next_char)
+            
+        return "".join(result)
+
+def main():
+    # 1. Welcome and introduction message
+    print("=" * 55)
+    print(" Welcome to the LZ77 Text Compression Tool!")
+    print("=" * 55)
+
+    compressor = LZ77Compressor(window_size=7, buffer_size=4)
+
+    # 2. Prompt user for text input
+    text = input("\nPlease enter the text you want to compress: ")
+
+    if not text:
+        print("No input provided. Exiting program.")
+        return
+
+    # 3. Perform compression
+    tags = compressor.compress(text)
+    
+    print("\n--- Compression Completed Successfully! ---")
+    print("Generated Tags:")
+    for tag in tags:
+        print(f"[distance: {tag[0]}, length: {tag[1]}, next_char: '{tag[2]}']")
+
+    # 4. Ask user for decompression
+    choice = input("\nWould you like to decompress the text? (y/n): ").strip().lower()
+
+    if choice in ['y', 'yes']:
+        decompressed_text = compressor.decompress(tags)
+        print("\n--- Decompression Result ---")
+        print("Decompressed Text:", decompressed_text)
+        print("\nThank you for using the LZ77 Compressor. Goodbye! 👋")
+    else:
+        # 5. Goodbye message on decline
+        print("\nDecompression skipped. Thank you and goodbye! 👋")
+
+if __name__ == "__main__":
+    main()   
 
 
 #for test 
