@@ -26,6 +26,18 @@ class LZ77Compressor:
                 longest_match = length
                 distance = len(search_window) - i
         return distance, longest_match
+    def calcSizeBeforeCompress(self , data):
+        return len(data) * 8
+    
+    def calcSizeAfterCompress(self , tags):
+        max_dist = max(tag[0] for tag in tags)
+        max_len = max(tag[1] for tag in tags)
+        dist_bits = max_dist.bit_length()
+        len_bits = max_len.bit_length()
+        next_char_bits = 8
+        bits_for_tag = dist_bits + len_bits + next_char_bits
+        return bits_for_tag * len(tags)
+        
 
     def compress(self, data):
         tags = []
@@ -89,6 +101,11 @@ def main():
         print("Generated Tags:")
         for tag in tags:
             print(f"[distance: {tag[0]}, length: {tag[1]}, next_char: '{tag[2]}']")
+        
+        size_data_before = compressor.calcSizeBeforeCompress(text)
+        size_data_after = compressor.calcSizeAfterCompress(tags)
+        print("Before:" , size_data_before , "bits")    
+        print("After:" , size_data_after , "bits")    
 
        
         decompress_choice = input("\nWould you like to decompress these tags now? (y/n): ").strip().lower()
