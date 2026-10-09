@@ -107,8 +107,9 @@ def main():
         
         size_data_before = compressor.calcSizeBeforeCompress(text)
         size_data_after = compressor.calcSizeAfterCompress(tags)
-        print("Before:" , size_data_before , "bits")    
-        print("After:" , size_data_after , "bits")    
+        print("=" * 55)
+        print("The Original Size is : " , size_data_before , "bits")    
+        print("The size after compression : " , size_data_after , "bits")    
 
        
         decompress_choice = input("\nWould you like to decompress these tags now? (y/n): ").strip().lower()
