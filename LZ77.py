@@ -14,17 +14,20 @@ class LZ77Compressor:
     def find_longest_match(self, search_window, look_ahead):
         longest_match = 0
         distance = 0
+        if not search_window :
+            return 0,0
         for i in range(len(search_window)):
             length = 0
-            while (
-                length < len(look_ahead) and 
-                i + length < len(search_window) and
-                search_window[i + length] == look_ahead[length]
-            ):
+            current_distance = len(search_window) - i
+            while ( length < len(look_ahead) ):
+                source_index = i + (length % current_distance)
+                if(search_window[source_index] != look_ahead[length]):
+                    break
                 length += 1
+                
             if length > longest_match:
                 longest_match = length
-                distance = len(search_window) - i
+                distance = current_distance
         return distance, longest_match
     def calcSizeBeforeCompress(self , data):
         return len(data) * 8
